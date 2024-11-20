@@ -1,2 +1,1 @@
-# css
-Complex social systems
+# Simulating the impact of a Recommender System in segregation dynamics

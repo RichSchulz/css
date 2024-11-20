@@ -2,9 +2,6 @@ import mesa
 from model import Schelling
 
 
-
-
-
 def get_happy_agents(model):
     """
     Display a text count of how many happy agents there are.

@@ -14,17 +14,10 @@ fixed_params = {
     'homophily': 3
 }
 
-#policies = ["random", "distance", "relevance", "distance_relevance", "rich_neighborhood", "poor_neighborhood", "minimum_improvement", "maximum_improvement", "recently_emptied", "historically_emptied" ]
 
 policies = ["random", "distance_relevance", 
             "minimum_improvement", "recently_emptied", 
-            "similar_neighborhood", "different_neighborhood", "maximum_improvement" ]
-
-#policies = ["similar_neighborhood", "maximum_improvement" ]
-
-#policies = ["similar_neighborhood", "different_neighborhood" ]
-
-#policies = ["similar_neighborhood"]
+            "similar_neighborhood", "different_neighborhood", "maximum_improvement", "similar_history_cell"]
 
 
 

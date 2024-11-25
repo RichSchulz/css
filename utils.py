@@ -96,6 +96,53 @@ def calculate_cell_emptiness_time(model, empty_cell):
         
     return empty_time
 
+
+def calculate_similarity_history_cell(model, agent, cell):
+    """
+    - Calculate the similarity between the agent and the cell in the past steps
+    Do it using the model.cell_occupancy_matrix_array that contains, per each step, the agent in each cell.
+    
+    To do that, we look at the last 5 steps and count the number of times an agent with the same type has been in the cell.
+    """
+    # Similarity cannot be 0 so we initialize it to 1
+    similarity = 1
+
+    for i in range(len(model.cell_occupancy_matrix_array)-1, max(-1, len(model.cell_occupancy_matrix_array)-6), -1):
+        if model.cell_occupancy_matrix_array[i][cell[0]][cell[1]] == agent.type:
+            similarity += 1
+        else:
+            continue
+
+    return similarity
+
+
+def calculate_similarity_history_neighborhood(model, agent, cell):
+    """
+    - Calculate the similarity between the agent and the neighborhood of the cell in the past steps
+    Do it using the model.cell_occupancy_matrix_array that contains, per each step, the agent in each cell.
+    
+    To do that, we look at the last 5 steps and count the number of times an agent with the same type has been in the neighborhood.
+    """
+    # Similarity cannot be 0 so we initialize it to 1
+    similarity = 1
+
+    for i in range(len(model.cell_occupancy_matrix_array)-1, max(-1, len(model.cell_occupancy_matrix_array)-6), -1):
+        neighbors = model.grid.get_neighbors(cell, moore=True, include_center = True)
+        if len(neighbors) == 0:
+            continue
+
+        alike_neighbors = 0
+        for neighbor in neighbors:
+            if model.cell_occupancy_matrix_array[i][neighbor.pos[0]][neighbor.pos[1]] == agent.type:
+                alike_neighbors += 1
+        
+        alike_neighbors = alike_neighbors / len(neighbors)
+
+        similarity += alike_neighbors
+
+    return similarity
+
+
 def calculate_empty_surrounded(model, empty_cell):
     """
     - Calculate the number of empty cells that surround the empty_cell

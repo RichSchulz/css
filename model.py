@@ -31,7 +31,8 @@ class Schelling(mesa.Model):
     Model class for the Schelling segregation model.
     """
 
-    def __init__(self, width=20, height=20, density=0.8, minority_pc=0.4, k = 30, homophily=3, seed = None, policy = "classical",  follow_policy = 1.0):
+    def __init__(self, width=20, height=20, density=0.8, minority_pc=0.4, k = 30, homophily=3, seed = None,
+                 policy = "classical",  follow_policy = 1.0, altruism=0.0):
         """ """
 
         self.width = width
@@ -39,6 +40,7 @@ class Schelling(mesa.Model):
         self.density = density
         self.minority_pc = minority_pc
         self.homophily = homophily
+        self.altruism = altruism
 
         self.schedule = mesa.time.RandomActivation(self)
         self.grid = mesa.space.SingleGrid(width, height, torus=False)
@@ -110,8 +112,14 @@ class Schelling(mesa.Model):
                 agent_policy = "random"
                 if self.random.random() < self.follow_policy:
                     agent_policy = self.policy
+                
+                # Altruism
+                agent_altruism = False
+                if self.random.random() < self.altruism:
+                    agent_altruism = True
 
-                agent = SchellingAgent(id = id, pos = (x, y), model = self, agent_type= agent_type, income = income, agent_policy= agent_policy)
+                agent = SchellingAgent(id = id, pos = (x, y), model = self, agent_type= agent_type,
+                                       income = income, agent_policy= agent_policy, altruism=agent_altruism)
                 self.grid.place_agent(agent, (x, y))
                 self.schedule.add(agent)
                 id += 1

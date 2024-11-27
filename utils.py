@@ -58,6 +58,72 @@ def calculate_alike_destination(model, agent, empty_cell):
 
 
 
+def is_improving_overall_happiness(model, agent, empty_cell):
+    """
+    Calculate overall happiness of the current and hypothetical neighborhoods of the agent and compare them.
+    
+    Parameters:
+    - model: The Schelling model instance
+    - agent: The agent considering a move
+    - empty_cell: The potential new location for the agent
+    
+    Returns:
+    - True if the agent's move would increase the overall happiness level, False otherwise
+    """
+    
+    similar_current = 0
+    similar_hypothetical = 0
+    
+    happiness_current = 0
+    happiness_hypothetical = 0
+    
+    # Calculate the happiness of the original neighbors of an agent
+    for neighbor in model.grid.iter_neighbors(agent.pos, moore=True):
+        
+        # Count similar neighbors for the current neighbor
+        similar_current = sum(1 for nn in neighbor.model.grid.iter_neighbors(neighbor.pos, moore=True, include_center=False) if neighbor.type == nn.type)
+        
+        # Calculate how many similar neighbors the current neighbor would have if the agent moved
+        # Subtract 1 if the neighbor is similar to the agent and the empty cell is not in the neighbor's neighborhood
+        similar_hypothetical = similar_current - 1 if (neighbor.type == agent.type and empty_cell not in neighbor.model.grid.iter_neighbors(neighbor.pos, moore=True)) else similar_current
+        
+        # Increment happiness counters if the similarity threshold is met
+        if similar_current >= model.homophily:
+            happiness_current += 1
+        
+        if similar_hypothetical >= model.homophily:
+            happiness_hypothetical += 1
+            
+    # Calculate the happiness of the neighbors in the hypothetical new neighborhood
+    for neighbor in model.grid.iter_neighbors(empty_cell, moore=True):
+        # Count similar neighbors for the current neighbor in the new location
+        similar_current = sum(1 for nn in neighbor.model.grid.iter_neighbors(neighbor.pos, moore=True, include_center=False) if neighbor.type == nn.type)
+        
+        # Calculate how many similar neighbors the current neighbor would have if the agent moved here
+        # Add 1 if the neighbor type matches the agent type
+        similar_hypothetical = similar_current + 1 if neighbor.type == agent.type else similar_current
+        
+        # Increment happiness counters if the similarity threshold is met
+        if similar_current >= model.homophily:
+            happiness_current += 1
+        
+        if similar_hypothetical >= model.homophily:
+            happiness_hypothetical += 1
+    
+    # Add the happiness of the agent if it moved to the new location
+    # Increment hypothetical happiness if the new location has enough similar neighbors
+    happiness_hypothetical += 1 if calculate_alike_destination(model, agent, empty_cell) >= model.homophily else happiness_hypothetical
+    
+    # Return True if the move improves overall happiness, False otherwise
+    return happiness_hypothetical > happiness_current
+
+
+
+
+
+
+
+
 #return a measure of similarity between the neighborhood richness of the agent and the neighborhood richness of the empty_cell
 #must be inversely proportional to the difference between the two
 
@@ -171,6 +237,13 @@ def pick_random_row(df, percent_cumul_limit_low = 0, percent_cumul_limit_high = 
 #pick a random amount between the lower and upper bound of a row picked with pick_random_row
 def pick_random_amount(df, row):
     return np.random.uniform(df["bound_low"][row], df["bound_high"][row])
+
+# get overall happyness
+def get_overall_happyness(model):
+    
+    model_size = model.width * model.height
+    
+    return model.happyness / model_size
 
 
 

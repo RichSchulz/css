@@ -187,7 +187,7 @@ def pick_a_cell_according_to_policy(agent,model):
 
         selected_cell = model.random.choices(list(empties2empties.keys()), weights=empties2empties.values())[0]
         
-    if agent.policy == "similar_history_cell":
+    if agent.policy == "similar_history_cell" and altruism == False:
         empties2similar_history_cell = {cell: calculate_similarity_history_cell(model, agent, cell) for cell in empties}
 
         #sort the dictionary by value
@@ -198,7 +198,7 @@ def pick_a_cell_according_to_policy(agent,model):
 
         selected_cell = model.random.choices(list(empties2similar_history_cell.keys()), weights=empties2similar_history_cell.values())[0]
     
-    if agent.policy == "similar_history_neighborhood":
+    if agent.policy == "similar_history_neighborhood" and altruism == False:
         empties2similar_history_cell = {cell: calculate_similarity_history_neighborhood(model, agent, cell) for cell in empties}
 
         #sort the dictionary by value

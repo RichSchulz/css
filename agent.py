@@ -24,7 +24,7 @@ def pick_a_cell_according_to_policy(agent,model):
                             "rich_neighborhood", "poor_neighborhood",
                               "minimum_improvement", "maximum_improvement", 
                               "recently_emptied", "historically_emptied", "empty_surrounded", 
-                              "similar_neighborhood", "different_neighborhood"]:
+                              "similar_neighborhood", "different_neighborhood", "similar_history_cell", "similar_history_neighborhood"]:
         raise Exception("Policy not recognized")
 
     if agent.policy == "random" and altruism == False:
@@ -186,9 +186,28 @@ def pick_a_cell_according_to_policy(agent,model):
 
 
         selected_cell = model.random.choices(list(empties2empties.keys()), weights=empties2empties.values())[0]
+        
+    if agent.policy == "similar_history_cell":
+        empties2similar_history_cell = {cell: calculate_similarity_history_cell(model, agent, cell) for cell in empties}
 
+        #sort the dictionary by value
+        empties2similar_history_cell = dict(sorted(empties2similar_history_cell.items(), key=lambda item: item[1], reverse=True))
 
+        #pick the first k cells
+        empties2similar_history_cell = dict(list(empties2similar_history_cell.items())[:model.k])
 
+        selected_cell = model.random.choices(list(empties2similar_history_cell.keys()), weights=empties2similar_history_cell.values())[0]
+    
+    if agent.policy == "similar_history_neighborhood":
+        empties2similar_history_cell = {cell: calculate_similarity_history_neighborhood(model, agent, cell) for cell in empties}
+
+        #sort the dictionary by value
+        empties2similar_history_cell = dict(sorted(empties2similar_history_cell.items(), key=lambda item: item[1], reverse=True))
+
+        #pick the first k cells
+        empties2similar_history_cell = dict(list(empties2similar_history_cell.items())[:model.k])
+
+        selected_cell = model.random.choices(list(empties2similar_history_cell.keys()), weights=empties2similar_history_cell.values())[0]
 
     return selected_cell
 

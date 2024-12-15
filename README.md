@@ -26,7 +26,7 @@ We provide several Jupyter notebooks for running simulations and analyzing the r
 
 Available notebooks:
 
-- **`analysis.ipynb`**: General analysis of simulation results.
+- **`analysis.ipynb`**: General analysis of simulation results for a single altruism level.
 - **`history_policy_analysis.ipynb`**: Investigates the effects of history-based relocation policies.
 - **`analysis_different_altruism_levels.ipynb`**: Examines the impact of varying levels of altruism on segregation dynamics.
 
@@ -36,7 +36,7 @@ To run a notebook, use the command:
 jupyter notebook <notebook_name>.ipynb
 ```
 
-To double check our results they have been saved to CSV files. These can be re-read into the jupyter notebooks (instead of re-running the simulations itself which can take up to multiple days of computation depending on your machine). Please refere to the `results_<type_of_result>.csv` files for this and make sure to use the correct file for each notebook.
+To double check our results they have been saved to CSV files. These can be re-read into the jupyter notebooks (instead of re-running the simulations itself which can take up to multiple days of computation depending on your machine). Please refer to the `results-<type_of_result>.csv` files for this and make sure to use the correct file for each notebook.
 
 ---
 
